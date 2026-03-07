@@ -1,20 +1,30 @@
-version: '3'
 services:
   db:
-    image: postgres
+    image: postgres:17
     restart: always
     volumes:
-      - ./data/db:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     ports:
       - 5432:5432  # make sure you don't have another container running on 5432
 
     environment:
-      - POSTGRES_DB=chaiDB
-      - POSTGRES_USER=chaiaurcode
-      - POSTGRES_PASSWORD=chaiaurcode
+      - POSTGRES_DB=${POSTGRES_DB:-chaiDB}
+      - POSTGRES_USER=${POSTGRES_USER:-chai}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-chai}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-chai}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   adminer:
-    image: adminer
+    image: adminer:5.2.1
     restart: always
+    depends_on:
+      db:
+        condition: service_healthy
     ports:
       - 8080:8080
+
+volumes:
+  postgres_data:
