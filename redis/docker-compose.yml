@@ -3,7 +3,10 @@
 
 services:
   redis:
+    # Use a pinned version for reproducible local setup.
     image: redis:7.4
+    # Optional floating tag for experiments:
+    # image: redis:latest
     container_name: redis
     restart: always
     ports:

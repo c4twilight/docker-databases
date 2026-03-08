@@ -3,6 +3,10 @@ services:
   db:
     image: mysql:8.4
     restart: always
+    # Values are picked from ../.env when present, otherwise fallback defaults are used.
+    env_file:
+      - path: ../.env
+        required: false
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
       MYSQL_DATABASE: ${MYSQL_DATABASE:-chaiDB}
