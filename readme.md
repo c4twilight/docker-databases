@@ -8,6 +8,10 @@ Production-style local database setup using Docker Compose for backend developme
 - MongoDB
 - Redis (+ RedisInsight)
 
+## Image Tag Guidance
+- Pinned image tags are used by default for reproducibility.
+- If you want exploratory behavior, a commented `latest` option is shown in `redis/docker-compose.yml`.
+
 Learning comments are kept in compose/readme files and organized for clarity.
 
 ## Prerequisites
@@ -16,6 +20,7 @@ Learning comments are kept in compose/readme files and organized for clarity.
 ## Environment Variables
 1. Copy `.env.example` to `.env`
 2. Update credentials as needed
+3. Compose files also include fallback defaults (`${VAR:-default}`) for quick local startup
 
 ## Quick Start
 From repository root, run one stack at a time:
