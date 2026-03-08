@@ -2,3 +2,5 @@
 /mongodb/db_data
 /mysql/mysql
 /postgresql/data
+.DS_Store
+**/.env

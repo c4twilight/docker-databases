@@ -1,21 +1,33 @@
 # a docker compose file for mysql and adminer with a volume for the database and setup for environment variables
-
-version: "3.1"
 services:
   db:
-    image: mysql
+    image: mysql:8.4
     restart: always
+    # Values are picked from ../.env when present, otherwise fallback defaults are used.
+    env_file:
+      - path: ../.env
+        required: false
     environment:
-      MYSQL_ROOT_PASSWORD: chaiaurcode
-      MYSQL_DATABASE: chaiDB
-      MYSQL_USER: chai
-      MYSQL_PASSWORD: chai
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-chaiDB}
+      MYSQL_USER: ${MYSQL_USER:-chai}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-chai}
     ports:
       - 3306:3306 # make sure you don't have another container running on 3306
     volumes:
-      - ./mysql:/var/lib/mysql
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
   adminer:
-    image: adminer
+    image: adminer:5.2.1
     restart: always
+    depends_on:
+      db:
+        condition: service_healthy
     ports:
       - 8080:8080
+volumes:
+  mysql_data:
